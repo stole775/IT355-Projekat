@@ -1,0 +1,34 @@
+** AccommodationphotoController **
+/api/accomodationphoto   ->vrati sve
+/api/accomodationphoto/{id}  po id
+/api/accomodationphoto/image/accommodationId/{accommodationId} lista stringova slika po id smestaja
+
+
+** AccomodationController **
+/api/accommodation sve
+/api/accommodation/name/{name} listu po nazivu celom
+/api/accommodation/nameC/{name} lista po nazivu koji zadrzi u imenu
+/api/accommodation/istaknutiOglasi lista istaknutih oglasa
+/api/accommodation/cityId/{city_id} lista svih smestaja u jednom gradu
+/api/accommodation/{id} pretraga po id smestaja vraca listu ali sa jednim elementom
+
+** CityController **
+/api/city  lista svega
+/api/city/name/{name}  lista po nazivu sadrzi
+/api/city/{id} jedan grad po id
+/api/city/countryId/{id} lista po countryId
+
+** CountryController **
+/api/country lista sve
+/api/country/nameC/{name} lista zemalja sadrzi u nazivu
+/api/country/{id} lista po id gradova
+
+** TraveldayController **
+/api/travelday sve lista
+/api/travelday/{id} vraca listu po id
+
+** SearchController **
+/api/search/city/{name} lista po nazivu sadrzi limit 4
+/api/search/accommodation/{name} **
+/api/search/country/{name} **
+
