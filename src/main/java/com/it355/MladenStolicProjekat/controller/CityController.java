@@ -1,13 +1,11 @@
 package com.it355.MladenStolicProjekat.controller;
 
 import com.it355.MladenStolicProjekat.entity.City;
-import com.it355.MladenStolicProjekat.entity.Country;
 import com.it355.MladenStolicProjekat.service.CityService;
 import com.it355.MladenStolicProjekat.service.CountryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +38,7 @@ public class CityController {
     @GetMapping("/{id}")
     public ResponseEntity<City> findById(@PathVariable int id) {
         Optional<City> city = cityService.findById(id);
-        return city.map(value -> ResponseEntity.ok((City) value)).orElseGet(() -> ResponseEntity.notFound().build());
+        return city.map(value -> ResponseEntity.ok(value)).orElseGet(() -> ResponseEntity.notFound().build());
     }
     @GetMapping("/countryId/{id}")
     public ResponseEntity<List<City>> findByCountryId(@PathVariable int id) {

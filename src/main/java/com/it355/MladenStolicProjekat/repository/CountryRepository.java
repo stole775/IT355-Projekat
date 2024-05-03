@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface CountryRepository extends JpaRepository<Country, Integer> {
-    @Override
+
     List<Country> findAll();
     List<Country> findByNameContains(String name);
     Optional<Country> findById(int id);

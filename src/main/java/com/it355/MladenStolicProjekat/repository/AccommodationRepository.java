@@ -10,9 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface AccommodationRepository extends JpaRepository<Accommodation, Integer> {
-    @Query(value = "SELECT * FROM accommodations", nativeQuery = true)
     List<Accommodation> findAll();
-
     List<Accommodation> findByName(String name);
     List<Accommodation> findByNameContaining(String name);
     @Query(value="SELECT * FROM Accommodations WHERE featured = TRUE",nativeQuery = true)

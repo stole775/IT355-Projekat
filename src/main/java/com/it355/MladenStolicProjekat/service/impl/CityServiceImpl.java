@@ -1,13 +1,13 @@
 package com.it355.MladenStolicProjekat.service.impl;
 
-import com.it355.MladenStolicProjekat.entity.Accommodation;
+
 import com.it355.MladenStolicProjekat.entity.City;
 import com.it355.MladenStolicProjekat.repository.CityRepository;
 import com.it355.MladenStolicProjekat.service.CityService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
+
 import java.util.List;
 import java.util.Optional;
 
