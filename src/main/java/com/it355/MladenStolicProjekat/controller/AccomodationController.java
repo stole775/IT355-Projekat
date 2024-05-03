@@ -4,10 +4,7 @@ import com.it355.MladenStolicProjekat.entity.Accommodation;
 import com.it355.MladenStolicProjekat.service.AccomodationService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -55,5 +52,14 @@ public class AccomodationController {
     public ResponseEntity<Optional<Accommodation>> findById(@PathVariable int id) {
         return ResponseEntity.ok(accomodationService.findById(id));
     }
+    @PostMapping("/")
+    public Accommodation addOrUpdateAccommodation(@RequestBody Accommodation accommodation) {
+        return accomodationService.saveOrUpdateAccommodation(accommodation);
+    }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteAccommodation(@PathVariable int id) {
+        accomodationService.deleteAccommodationById(id);
+        return ResponseEntity.ok().build();
+    }
 }

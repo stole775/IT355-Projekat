@@ -12,5 +12,6 @@ public interface AccomodationService {
     List<Accommodation> istaknutiOglasi();
     List<Accommodation> findByCityId(int city_id);
     Optional<Accommodation> findById(int id);
-    List<Accommodation> findByNameContainsIgnoreCase(String name);
+    Accommodation saveOrUpdateAccommodation(Accommodation accommodation);
+    void deleteAccommodationById(int id);
 }

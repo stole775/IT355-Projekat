@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -25,7 +26,7 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
-    public List<Country> findById(int id) {
+    public Optional<Country> findById(int id) {
         return countryRepository.findById(id);
     }
 

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -37,12 +38,12 @@ public class CountryController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Country> findById(@PathVariable int id) {
-        List<Country> country = countryService.findById(id);
+    public ResponseEntity<Optional<Country>> findById(@PathVariable int id) {
+        Optional<Country> country = countryService.findById(id);
         if (country.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok((Country) countryService.findById(id));
+        return ResponseEntity.ok(countryService.findById(id));
     }
 
 

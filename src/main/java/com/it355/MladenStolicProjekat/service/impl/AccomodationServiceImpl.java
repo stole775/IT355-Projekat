@@ -3,6 +3,7 @@ package com.it355.MladenStolicProjekat.service.impl;
 import com.it355.MladenStolicProjekat.entity.Accommodation;
 import com.it355.MladenStolicProjekat.repository.AccommodationRepository;
 import com.it355.MladenStolicProjekat.service.AccomodationService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -45,8 +46,17 @@ public class AccomodationServiceImpl implements AccomodationService {
     }
 
     @Override
-    public List<Accommodation> findByNameContainsIgnoreCase(String name) {
-        return accomodationRepository.findByNameContainsIgnoreCase(name);
+    @Transactional
+    public Accommodation saveOrUpdateAccommodation(Accommodation accommodation) {
+        return accomodationRepository.save(accommodation);
     }
+
+    @Override
+    @Transactional
+    public void deleteAccommodationById(int id) {
+        accomodationRepository.deleteById(id);
+    }
+
+
 
 }

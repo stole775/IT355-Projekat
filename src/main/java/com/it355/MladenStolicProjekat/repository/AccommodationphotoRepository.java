@@ -11,11 +11,11 @@ import java.util.List;
 
 @Repository
 public interface AccommodationphotoRepository extends JpaRepository<Accommodationphoto, Integer> {
-    List<Accommodationphoto> findAllByid(Integer id);
-    List<Accommodationphoto> findAll();
-    @Query(value = " SELECT imageUrl FROM AccommodationPhotos\n" +
-            "        WHERE accommodationId = ?;",nativeQuery = true)
-    List<String> imageURLbyAccommodationId(Integer id);
+    @Query(value = " SELECT image_url FROM AccommodationPhotos  WHERE accommodation_id = :accommodationId",nativeQuery = true)
+    List<String> findImageUrlByAccommodationId(int accommodationId);
 
-
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO AccommodationPhoto (accommodationId, imageUrl) VALUES (:accommodationId, :imageUrl)",nativeQuery = true)
+    void savePhoto(int accommodationId, String imageUrl);
 }

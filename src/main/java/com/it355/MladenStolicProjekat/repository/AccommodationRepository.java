@@ -17,9 +17,10 @@ public interface AccommodationRepository extends JpaRepository<Accommodation, In
     List<Accommodation> findByNameContaining(String name);
     @Query(value="SELECT * FROM Accommodations WHERE featured = TRUE",nativeQuery = true)
     List<Accommodation> istaknutiOglasi();
-    @Query(value = "SELECT * FROM Accommodations WHERE city_id = :city_id",nativeQuery = true)
+    @Query(value = "SELECT * FROM Accommodations WHERE city_id = :city_id ",nativeQuery = true)
     List<Accommodation> findByCityId(int city_id);
     Optional<Accommodation> findById(int id);
-    @Query(value = "SELECT * FROM Accommodations WHERE name LIKE :name LIMIT 4",nativeQuery = true)
-    List<Accommodation> findByNameContainsIgnoreCase(String name);
+
+
+
 }

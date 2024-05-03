@@ -1,7 +1,6 @@
 ** AccommodationphotoController **
 /api/accomodationphoto   ->vrati sve
-/api/accomodationphoto/{id}  po id
-/api/accomodationphoto/image/accommodationId/{accommodationId} lista stringova slika po id smestaja
+/images/{accommodationphotoId}" lista stringova slika po id smestaja
 
 
 ** AccomodationController **

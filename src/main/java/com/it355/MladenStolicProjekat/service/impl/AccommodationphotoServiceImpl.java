@@ -17,20 +17,15 @@ public class AccommodationphotoServiceImpl implements AccommodationphotoService 
     final AccommodationphotoRepository accommodationphotoRepository;
     final AccomodationService accomodationService;
 
-    @Override
-    public List<Accommodationphoto> findAllByid(Integer id) {
-        return accommodationphotoRepository.findAllByid(id);
-    }
 
+    @Override
+    public List<String> findImageUrlByAccommodationId(int accommodationId) {
+        return accommodationphotoRepository.findImageUrlByAccommodationId(accommodationId);
+    }
 
     @Override
     public List<Accommodationphoto> findAll() {
         return accommodationphotoRepository.findAll();
-    }
-
-    @Override
-    public List<String> imageURLbyAccommodationId(Integer accommodationId) {
-        return accommodationphotoRepository.imageURLbyAccommodationId(accommodationId);
     }
 
     @Override

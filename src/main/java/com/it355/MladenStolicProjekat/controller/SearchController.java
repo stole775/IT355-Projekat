@@ -37,7 +37,7 @@ public class SearchController {
     }
     @GetMapping("/accommodation/{name}")
     public ResponseEntity<List<Accommodation>> searchAccomodationTop4(@PathVariable String name) {
-        List<Accommodation> acc = accomodationService.findByNameContainsIgnoreCase(name);
+        List<Accommodation> acc = accomodationService.findByNameContaining(name);
         if (acc.isEmpty()) {
             return ResponseEntity.notFound().build();
         }

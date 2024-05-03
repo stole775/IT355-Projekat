@@ -14,11 +14,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class ImageUploadController {
 
-    private static final String TARGET_FOLDER = "/src/images/";
+    private static final String TARGET_FOLDER = "./src/images/";
     private static final String UPLOAD_DIR = TARGET_FOLDER + "/upload/";
 
     private final AccommodationphotoService accommodationphotoService;
@@ -28,25 +29,27 @@ public class ImageUploadController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadImage(@RequestParam("images") MultipartFile[] files, @RequestParam("accommodationId") int accommodationId) {
+    public ResponseEntity<Map<String, String>> uploadImage(@RequestParam("images") MultipartFile[] files, @RequestParam("accommodationId") int accommodationId) {
         if (files.length == 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No files uploaded");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Nema fajlova"));
         }
+        System.out.println("Current working directory: " + System.getProperty("user.dir"));
 
         try {
+            if (!Files.exists(Paths.get(UPLOAD_DIR))) {
+                Files.createDirectories(Paths.get(UPLOAD_DIR));
+            }
+
             for (MultipartFile file : files) {
                 byte[] bytes = file.getBytes();
                 Path path = Paths.get(UPLOAD_DIR + file.getOriginalFilename());
                 Files.write(path, bytes);
-
-
-
                 accommodationphotoService.savePhoto(accommodationId, path.toString());
             }
 
-            return ResponseEntity.ok("Files uploaded successfully");
+            return ResponseEntity.ok(Map.of("message", "Files uploaded successfully"));
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "Error occurred"));
         }
     }
 }
