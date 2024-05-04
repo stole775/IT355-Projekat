@@ -7,7 +7,6 @@ import com.it355.MladenStolicProjekat.service.CityService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-
 import java.util.List;
 import java.util.Optional;
 
@@ -21,10 +20,6 @@ public class CityServiceImpl implements CityService {
         return cityRepository.findByNameContains(name);
     }
 
-    @Override
-    public List<City> findByCountryId(int country_id) {
-        return cityRepository.findByCountryId(country_id);
-    }
 
     @Override
     public List<City> findAll() {
@@ -43,13 +38,20 @@ public class CityServiceImpl implements CityService {
         return cityRepository.findAllByCountryId(country_id);
     }
 
-    @Override
+
     public City saveOrUpdateCity(City city) {
         return cityRepository.save(city);
     }
 
     @Override
+    public List<String> findImageUrlByCityId(int accommodationId) {
+        return cityRepository.findImageUrlByCityId(accommodationId);
+    }
+
+
     public void deleteCityById(int id) {
           cityRepository.deleteById(id);
     }
+
+
 }

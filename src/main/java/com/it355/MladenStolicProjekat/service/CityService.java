@@ -11,4 +11,7 @@ public interface CityService {
     List<City> findAll();
     Optional<City> findById(int id);
     List<City> findAllByCountryId(int country_id);
+    void deleteCityById(int id);
+    City saveOrUpdateCity(City city);
+    List<String> findImageUrlByCityId(int accommodationId);
 }

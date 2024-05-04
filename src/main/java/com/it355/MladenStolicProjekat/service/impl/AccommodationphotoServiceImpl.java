@@ -32,7 +32,7 @@ public class AccommodationphotoServiceImpl implements AccommodationphotoService 
     @Transactional
     public void savePhoto(int accommodationId, String imageUrl) {
         Accommodation accommodation = accomodationService.findById(accommodationId)
-                .orElseThrow(() -> new RuntimeException("Accommodation not found with id: " + accommodationId));
+                .orElseThrow(() -> new RuntimeException("Accommodation nepostoji sa ovim  id: " + accommodationId));
 
         Accommodationphoto photo = new Accommodationphoto();
         photo.setAccommodation(accommodation);

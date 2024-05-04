@@ -12,13 +12,16 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 public class ImageUploadController {
 
-    private static final String TARGET_FOLDER = "./src/images/";
-    private static final String UPLOAD_DIR = TARGET_FOLDER + "/upload/";
+    private static final String UPLOAD_DIR = "./src/main/resources/static/images/";
+
 
     private final AccommodationphotoService accommodationphotoService;
 
@@ -31,23 +34,19 @@ public class ImageUploadController {
         if (files.length == 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Nema fajlova"));
         }
-        System.out.println("Current working directory: " + System.getProperty("user.dir"));
 
+        Map<String, String> response = new HashMap<>();
         try {
-            if (!Files.exists(Paths.get(UPLOAD_DIR))) {
-                Files.createDirectories(Paths.get(UPLOAD_DIR));
-            }
-
             for (MultipartFile file : files) {
-                byte[] bytes = file.getBytes();
-                Path path = Paths.get(UPLOAD_DIR + file.getOriginalFilename());
-                Files.write(path, bytes);
-                accommodationphotoService.savePhoto(accommodationId, path.toString());
+                String filename = Objects.requireNonNull(file.getOriginalFilename()).replace(" ", "_");
+                Path targetLocation = Paths.get(UPLOAD_DIR + filename);
+                Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+                accommodationphotoService.savePhoto(accommodationId,  filename);
+                response.put(file.getOriginalFilename(),  filename);
             }
-
-            return ResponseEntity.ok(Map.of("message", "Files uploaded successfully"));
+            return ResponseEntity.ok(response);
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "Error occurred"));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "Greska pri slanju fajlova"));
         }
     }
 }
