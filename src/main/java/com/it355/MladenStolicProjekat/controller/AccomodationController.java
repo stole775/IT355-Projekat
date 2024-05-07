@@ -3,10 +3,13 @@ package com.it355.MladenStolicProjekat.controller;
 import com.it355.MladenStolicProjekat.entity.Accommodation;
 import com.it355.MladenStolicProjekat.service.AccomodationService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -53,13 +56,41 @@ public class AccomodationController {
         return ResponseEntity.ok(accomodationService.findById(id));
     }
     @PostMapping("/")
-    public Accommodation addOrUpdateAccommodation(@RequestBody Accommodation accommodation) {
-        return accomodationService.saveOrUpdateAccommodation(accommodation);
+    public ResponseEntity<?> addOrUpdateAccommodation(@RequestBody Accommodation accommodation) {
+        Accommodation savedAccommodation = accomodationService.saveOrUpdateAccommodation(accommodation);
+        if (savedAccommodation != null && savedAccommodation.getId() != null) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("id", savedAccommodation.getId());
+            response.put("status", "success");
+            response.put("message", "Smestaj je dodat.");
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Error pri cuvanju smestaja"));
+        }
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteAccommodation(@PathVariable int id) {
         accomodationService.deleteAccommodationById(id);
         return ResponseEntity.ok().build();
     }
+    @PutMapping("/{id}/image")
+    public ResponseEntity<Accommodation> updateAccommodationImage(@PathVariable int id, @RequestParam("imageUrl") String imageUrl, @RequestParam("type") int type) {
+        Optional<Accommodation> existingAccommodation = accomodationService.findById(id);
+        if (existingAccommodation.isPresent()) {
+            Accommodation updatedAccommodation = existingAccommodation.get();
+            if (type == 1) {
+                updatedAccommodation.setImageUrl(imageUrl);
+            } else if (type == 2) {
+                updatedAccommodation.setPriceListImageUrl(imageUrl);
+            }
+            accomodationService.saveOrUpdateAccommodation(updatedAccommodation);
+            return ResponseEntity.ok(updatedAccommodation);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }
