@@ -28,7 +28,7 @@ public class CityController {
     final CountryService countryService;
     final ImageUploadController imageUploadController;
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<City>> findAll() {
         List<City> cities = cityService.findAll();
         return ResponseEntity.ok(cities);
