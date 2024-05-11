@@ -1,33 +1,69 @@
 ** AccommodationphotoController **
-/api/accomodationphoto   ->vrati sve
-/images/{accommodationphotoId}" lista stringova slika po id smestaja
+GET
+    /api/accomodationphoto   ->vrati sve
+    /images/{accommodationphotoId}" lista stringova slika po id smestaja
 
 
 ** AccomodationController **
-/api/accommodation sve
-/api/accommodation/name/{name} listu po nazivu celom
-/api/accommodation/nameC/{name} lista po nazivu koji zadrzi u imenu
-/api/accommodation/istaknutiOglasi lista istaknutih oglasa
-/api/accommodation/cityId/{city_id} lista svih smestaja u jednom gradu
-/api/accommodation/{id} pretraga po id smestaja vraca listu ali sa jednim elementom
+GET
+    /api/accommodation sve
+    /api/accommodation/name/{name} Vraca listu po nazivu celom
+    /api/accommodation/nameC/{name} lista po nazivu koji zadrzi name u imenu
+    /api/accommodation/istaknutiOglasi lista istaknutih oglasa
+    /api/accommodation/cityId/{city_id} lista svih smestaja u jednom gradu
+    /api/accommodation/{id} pretraga po id smestaja vraca listu ali sa jednim elementom Accommodation
+POST
+    /api/accommodation/ Dobija smestaj i ako je nov dodaje ako nije azurira postijeci
+DELETE
+     /api/accommodation/{id} dobije id i brise  deleteAccommodationById
+PUT
+    /api/accommodation/{id}/image dobija url slike gde se cuva i tip 1 ili 2 da zna koju sliku da menja u kojoj koloni
+
 
 ** CityController **
-/api/city  lista svega
-/api/city/name/{name}  lista po nazivu sadrzi
-/api/city/{id} jedan grad po id
-/api/city/countryId/{id} lista po countryId
+GET
+    /api/city  lista svega
+    /api/city/name/{name}  lista po nazivu sadrzi
+    /api/city/{id} Vraca jedan grad po id
+    /api/city/countryId/{id} Vraca listu gradova po countryId
+    /api/city/image/{id} Vraca url slike po id grada
+    /api/city/images/{filename:.+ vraca direktno sliku iz folderaq po nazivu u bazi
+    /api/city
+    /api/city
+
+DELETE
+    /api/city/{id} Brise po id
+POST
+     /api/city/  dodaje grad i poziva metodu za cuvanje slike
+            @RequestParam("name") String name,
+            @RequestParam("countryId") int countryId,
+            @RequestParam("opisGrada") String opisGrada,
+            @RequestParam("image") MultipartFile image) {
 
 ** CountryController **
-/api/country lista sve
-/api/country/nameC/{name} lista zemalja sadrzi u nazivu
-/api/country/{id} lista po id gradova
+GET
+    /api/country lista sve
+    /api/country/nameC/{name} lista zemalja sadrzi u nazivu
+    /api/country/{id} lista po id gradova
 
 ** TraveldayController **
-/api/travelday sve lista
-/api/travelday/{id} vraca listu po id
+GET
+    /api/travelday sve lista
+    /api/travelday/{id} vraca listu po id
 
 ** SearchController **
-/api/search/city/{name} lista po nazivu sadrzi limit 4
-/api/search/accommodation/{name} **
-/api/search/country/{name} **
+GET
+    /api/search/city/{name} lista po nazivu sadrzi limit 4
+    /api/search/accommodation/{name} **
+    /api/search/country/{name} **
 
+** AuthenticationController **
+POST
+    /login  Prima loginDTO poziva servis za autentifikaciju i vraca odgovor
+    /register Dobija admina i vraca odgovor servisa
+    /logout ocekuje header Authorization gde se nalazi Bearer token i dodaje ga na blacklistu
+
+ ** ImageUploadController **
+ POST
+     /upload postavlja vise slika kroz petlju i upisuje u bazu naziv slike
+     /single  postavlja jednu sliku i vraca naziv fajla

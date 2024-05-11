@@ -1,6 +1,6 @@
 package com.it355.MladenStolicProjekat.authentication;
 
-import com.it355.MladenStolicProjekat.repository.AdminRepository;
+import com.it355.MladenStolicProjekat.service.AdminService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class UserProvider {
 
-    private final AdminRepository adminRepository;
+    private final AdminService adminService;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -22,7 +22,7 @@ public class UserProvider {
     @Bean
     public UserDetailsService userDetailsService(){
         return username -> {
-            return adminRepository.findByUsername(username)
+            return adminService.findByUsername(username)
                     .orElseThrow(() -> new RuntimeException("User not found"));
         };
     }

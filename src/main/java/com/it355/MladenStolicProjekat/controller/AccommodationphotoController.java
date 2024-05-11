@@ -17,7 +17,6 @@ public class AccommodationphotoController {
     public ResponseEntity<List<Accommodationphoto>> findAll() {
         return ResponseEntity.ok(accommodationphotoService.findAll());}
 
-
     @GetMapping("/images/{accommodationphotoId}")
     public ResponseEntity<List<String>> findImagesByAccommodationId(@PathVariable int accommodationphotoId) {
         List<String> imageUrls = accommodationphotoService.findImageUrlByAccommodationId(accommodationphotoId);

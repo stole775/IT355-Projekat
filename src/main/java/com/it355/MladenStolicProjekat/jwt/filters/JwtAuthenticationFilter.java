@@ -3,7 +3,7 @@ package com.it355.MladenStolicProjekat.jwt.filters;
 import com.it355.MladenStolicProjekat.authentication.TokenBlackListService;
 import com.it355.MladenStolicProjekat.entity.Admin;
 import com.it355.MladenStolicProjekat.jwt.JwtService;
-import com.it355.MladenStolicProjekat.repository.AdminRepository;
+import com.it355.MladenStolicProjekat.service.AdminService;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +21,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final AdminRepository userRepository;
+    private final AdminService adminService;
     private final TokenBlackListService tokenBlackListService;
 
 
@@ -47,7 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             String username = jwtService.extractUsername(jwt);
 
-            Admin user = userRepository.findByUsername(username).get();
+            Admin user = adminService.findByUsername(username).get();
 
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                     username, null, user.getAuthorities()

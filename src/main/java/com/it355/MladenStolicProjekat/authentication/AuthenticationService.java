@@ -4,7 +4,7 @@ import com.it355.MladenStolicProjekat.dto.LoginResponse;
 import com.it355.MladenStolicProjekat.dto.LoginDTO;
 import com.it355.MladenStolicProjekat.entity.Admin;
 import com.it355.MladenStolicProjekat.jwt.JwtService;
-import com.it355.MladenStolicProjekat.repository.AdminRepository;
+import com.it355.MladenStolicProjekat.service.AdminService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +21,7 @@ public class AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
 
-    private final AdminRepository userRepository;
+    private final AdminService userRepository;
 
     private  final JwtService jwtService;
 

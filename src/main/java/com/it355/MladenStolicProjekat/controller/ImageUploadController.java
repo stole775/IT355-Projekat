@@ -26,11 +26,7 @@ public class ImageUploadController {
 
     private static final String UPLOAD_DIR = "./src/main/resources/static/images/";
 
-
     private final AccommodationphotoService accommodationphotoService;
-
-
-
 
     @PostMapping("/upload")
     public ResponseEntity<Map<String, String>> uploadImage(@RequestParam("images") MultipartFile[] files, @RequestParam("accommodationId") int accommodationId) {
