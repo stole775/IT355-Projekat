@@ -59,6 +59,7 @@ public class ImageUploadController {
     public ResponseEntity<Map<String, String>> uploadSingleImage(@RequestParam("file") MultipartFile file) {
         try {
             String originalFilename = file.getOriginalFilename();
+            assert originalFilename != null;//da ne izbacuje gresku dole null
             String filename = originalFilename.replace(" ", "_");
             String extension = filename.lastIndexOf(".") > 0 ? filename.substring(filename.lastIndexOf(".")) : "";
             String baseFilename = filename.substring(0, filename.lastIndexOf("."));
