@@ -3,7 +3,6 @@ package com.it355.MladenStolicProjekat.services;
 import com.it355.MladenStolicProjekat.entity.Country;
 import com.it355.MladenStolicProjekat.repository.CountryRepository;
 import com.it355.MladenStolicProjekat.service.impl.CountryServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

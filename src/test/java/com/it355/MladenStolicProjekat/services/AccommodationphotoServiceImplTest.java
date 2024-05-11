@@ -2,8 +2,6 @@ package com.it355.MladenStolicProjekat.services;
 import com.it355.MladenStolicProjekat.entity.Accommodation;
 import com.it355.MladenStolicProjekat.entity.Accommodationphoto;
 import com.it355.MladenStolicProjekat.repository.AccommodationphotoRepository;
-import com.it355.MladenStolicProjekat.service.AccommodationphotoService;
-import com.it355.MladenStolicProjekat.service.AccomodationService;
 import com.it355.MladenStolicProjekat.service.impl.AccommodationphotoServiceImpl;
 import com.it355.MladenStolicProjekat.service.impl.AccomodationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
