@@ -1,12 +1,17 @@
 package com.it355.MladenStolicProjekat.controller;
 
+import com.it355.MladenStolicProjekat.entity.Accommodation;
 import com.it355.MladenStolicProjekat.entity.City;
 import com.it355.MladenStolicProjekat.entity.Country;
+import com.it355.MladenStolicProjekat.service.AccommodationphotoService;
+import com.it355.MladenStolicProjekat.service.AccomodationService;
 import com.it355.MladenStolicProjekat.service.CityService;
 import com.it355.MladenStolicProjekat.service.CountryService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +32,8 @@ public class CityController {
     final CityService cityService;
     final CountryService countryService;
     final ImageUploadController imageUploadController;
+    final AccommodationphotoService accommodationphotoService;
+    final AccomodationService accomodationService;
 
     @GetMapping
     public ResponseEntity<List<City>> findAll() {
@@ -45,8 +52,8 @@ public class CityController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<City> findById(@PathVariable int id) {
-        Optional<City> city = cityService.findById(id);
+    public ResponseEntity<?> findById(@PathVariable int id) {
+        Optional<?> city = cityService.findById(id);
         return city.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
     @GetMapping("/countryId/{id}")
@@ -58,25 +65,76 @@ public class CityController {
         return ResponseEntity.ok(cities);
     }
 
+    private static final String UPLOAD_DIR = "./src/main/resources/static/images/";
+    @Transactional
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCity(@PathVariable int id) {
-        cityService.deleteCityById(id);
+        Optional<City> cityOpt = cityService.findById(id);
+        if (!cityOpt.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        City city = cityOpt.get();
+        List<Accommodation> accommodations = accomodationService.findByCityId(city.getId());
+
+        try {
+            for (Accommodation acc : accommodations) {
+                List<String> photos = accommodationphotoService.findImageUrlByAccommodationId(acc.getId());
+                for (String photo : photos) {
+                    Files.deleteIfExists(Paths.get(UPLOAD_DIR + photo));
+                }
+                Files.deleteIfExists(Paths.get(UPLOAD_DIR + acc.getImageUrl()));
+                accomodationService.deleteAccommodationById(acc.getId());
+            }
+
+            // Delete city image
+            Files.deleteIfExists(Paths.get(UPLOAD_DIR + city.getSlikaGradaURL()));
+
+            // Finally delete the city
+            cityService.deleteCityById(city.getId());
+
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete files: " + e.getMessage());
+        }
+
         return ResponseEntity.ok().build();
     }
+
     @PostMapping("/")
-    public ResponseEntity<City> addOrUpdateCity(
+    public ResponseEntity<City> addOrUpdateCity(//npravi posle
             @RequestParam("name") String name,
             @RequestParam("countryId") int countryId,
             @RequestParam("opisGrada") String opisGrada,
-            @RequestParam("image") MultipartFile image) {
+            @RequestParam("image") MultipartFile image,
+            @RequestParam(value = "id", required = false) Optional<Integer> cityId) {
 
-        Country country = countryService.findById(countryId).orElseThrow(() -> new RuntimeException("Country not found"));
+        Country country = countryService.findById(countryId)
+                .orElseThrow(() -> new RuntimeException("Country not found"));
+
         String imageUrl = null;
-        if (image != null && !image.isEmpty()) {
-            imageUrl = storeImage(image);
+        City city;
+
+        if (cityId.isPresent()) {
+            city = cityService.findById(cityId.get())
+                    .orElseThrow(() -> new RuntimeException("City not found"));
+
+            if (image != null && !image.isEmpty() && city.getSlikaGradaURL() != null) {
+                try {
+                    Files.deleteIfExists(Paths.get(UPLOAD_DIR + city.getSlikaGradaURL()));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                imageUrl = storeImage(image);
+            } else {
+                imageUrl = city.getSlikaGradaURL();
+            }
+        } else {
+            if (image != null && !image.isEmpty()) {
+                imageUrl = storeImage(image);
+            }
+            city = new City();
         }
 
-        City city = new City();
         city.setName(name);
         city.setCountry(country);
         city.setOpisGrada(opisGrada);

@@ -18,4 +18,8 @@ public interface AccommodationphotoRepository extends JpaRepository<Accommodatio
     @Transactional
     @Query(value = "INSERT INTO AccommodationPhoto (accommodationId, imageUrl) VALUES (:accommodationId, :imageUrl)",nativeQuery = true)
     void savePhoto(int accommodationId, String imageUrl);
+
+    @Query(value = " SELECT * FROM AccommodationPhotos  WHERE accommodation_id = :accommodationId",nativeQuery = true)
+    List<Accommodationphoto> findAllByAccommodationId(int accommodationId);
+
 }

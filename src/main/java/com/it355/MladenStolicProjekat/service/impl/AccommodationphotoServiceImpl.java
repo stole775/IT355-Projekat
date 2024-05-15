@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -39,4 +40,20 @@ public class AccommodationphotoServiceImpl implements AccommodationphotoService 
         photo.setImageUrl(imageUrl);
         accommodationphotoRepository.save(photo);
     }
+
+    @Override
+    public List<Accommodationphoto> findAllByAccommodationId(int accommodationId) {
+        return accommodationphotoRepository.findAllByAccommodationId(accommodationId);
+    }
+
+    @Override
+    public void delete(int id) {
+        accommodationphotoRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<?> getById(int id) {
+        return accommodationphotoRepository.findById(id);
+    }
+
 }

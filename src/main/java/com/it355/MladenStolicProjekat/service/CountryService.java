@@ -10,4 +10,5 @@ public interface CountryService {
     List<Country> findByNameContains(String name);//ispravi da radi contains
     Optional<Country> findById(int id);
     List<Country> findByNameContainsIgnoreCase(String name);
+    void deleteById(int id);
 }

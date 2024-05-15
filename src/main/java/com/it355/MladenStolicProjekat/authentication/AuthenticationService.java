@@ -64,7 +64,7 @@ public class AuthenticationService {
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("ID_Admina" , user.getId());
         extraClaims.put("Username" , user.getUsername());
-       // extraClaims.put("Role" , user.getRole() );
+        extraClaims.put("Role" , user.getRole() );
         return extraClaims;
     }
 }

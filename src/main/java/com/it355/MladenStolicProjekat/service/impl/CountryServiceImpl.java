@@ -34,4 +34,9 @@ public class CountryServiceImpl implements CountryService {
     public List<Country> findByNameContainsIgnoreCase(String name) {
         return countryRepository.findByNameContainsIgnoreCase(name);
     }
+
+    @Override
+    public void deleteById(int id) {
+        countryRepository.deleteById(id);
+    }
 }
