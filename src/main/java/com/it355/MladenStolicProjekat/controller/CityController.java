@@ -9,8 +9,6 @@ import com.it355.MladenStolicProjekat.service.CityService;
 import com.it355.MladenStolicProjekat.service.CountryService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -81,16 +79,15 @@ public class CityController {
             for (Accommodation acc : accommodations) {
                 List<String> photos = accommodationphotoService.findImageUrlByAccommodationId(acc.getId());
                 for (String photo : photos) {
+                    System.out.println(photo);
                     Files.deleteIfExists(Paths.get(UPLOAD_DIR + photo));
                 }
                 Files.deleteIfExists(Paths.get(UPLOAD_DIR + acc.getImageUrl()));
                 accomodationService.deleteAccommodationById(acc.getId());
             }
 
-            // Delete city image
             Files.deleteIfExists(Paths.get(UPLOAD_DIR + city.getSlikaGradaURL()));
 
-            // Finally delete the city
             cityService.deleteCityById(city.getId());
 
         } catch (IOException e) {
@@ -144,6 +141,7 @@ public class CityController {
         return ResponseEntity.ok(savedCity);
     }
 
+    private final Path rootLocation = Paths.get("./src/main/resources/static/images");
     private String storeImage(MultipartFile file) {
         try {
             String originalFilename = file.getOriginalFilename();
@@ -169,24 +167,7 @@ public class CityController {
         }
         return ResponseEntity.ok(imageUrls);
     }
-    private final Path rootLocation = Paths.get("./src/main/resources/static/images");
 
-    @GetMapping("/images/{filename:.+}")
-    public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
-        try {
-            Path file = rootLocation.resolve(filename);
-            Resource resource = new UrlResource(file.toUri());
-            if (resource.exists() && resource.isReadable()) {
-                return ResponseEntity.ok().contentLength(resource.contentLength())
-                        .body(resource);
-            } else {
-                System.out.println("Fajl ne moze da se otvori ili procita: " + filename);
-                throw new RuntimeException("Ne moze da otvori: " + filename);
-            }
-        } catch (IOException e) {
-            System.out.println("I/O GRESKA: "+e);
-            throw new RuntimeException("Greska u citanju fajla: " + filename, e);
-        }
-    }
+
 
 }

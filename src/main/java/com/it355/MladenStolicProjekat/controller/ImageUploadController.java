@@ -2,11 +2,11 @@ package com.it355.MladenStolicProjekat.controller;
 
 import com.it355.MladenStolicProjekat.service.AccommodationphotoService;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
@@ -78,5 +78,46 @@ public class ImageUploadController {
         }
     }
 
+    @DeleteMapping("/delete/{imageUrl}")
+    public ResponseEntity<Map<String, String>> deleteImage(@PathVariable String imageUrl) {
+        Path path = Paths.get(UPLOAD_DIR + imageUrl);
+        System.out.println("Attempting to delete image with URL: " + imageUrl);
+        if (Files.exists(path)) {
+            try {
+                Files.deleteIfExists(path);
+                Map<String, String> response = new HashMap<>();
+                response.put("message", "File deleted successfully");
+                accommodationphotoService.deleteByImageUrl(imageUrl);
+                return ResponseEntity.ok(response);
+            } catch (IOException e) {
+                Map<String, String> errorResponse = new HashMap<>();
+                errorResponse.put("message", "Error deleting the file");
+                return ResponseEntity.internalServerError().body(errorResponse);
+            }
+        } else {
+            Map<String, String> notFoundResponse = new HashMap<>();
+            notFoundResponse.put("message", "File not found");
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    private final Path rootLocation = Paths.get("./src/main/resources/static/images");
+    @GetMapping("/images/{filename:.+}")
+    public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
+        try {
+            Path file = rootLocation.resolve(filename);
+            Resource resource = new UrlResource(file.toUri());
+            if (resource.exists() && resource.isReadable()) {
+                return ResponseEntity.ok().contentLength(resource.contentLength())
+                        .body(resource);
+            } else {
+                System.out.println("Fajl ne moze da se otvori ili procita: " + filename);
+                throw new RuntimeException("Ne moze da otvori: " + filename);
+            }
+        } catch (IOException e) {
+            System.out.println("I/O GRESKA: "+e);
+            throw new RuntimeException("Greska u citanju fajla: " + filename, e);
+        }
+    }
 
 }

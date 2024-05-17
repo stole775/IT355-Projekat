@@ -56,4 +56,10 @@ public class AccommodationphotoServiceImpl implements AccommodationphotoService 
         return accommodationphotoRepository.findById(id);
     }
 
+    @Override
+    public void deleteByImageUrl(String imageUrl) {
+        accommodationphotoRepository.deleteByImageUrl(imageUrl);
+    }
+
+
 }

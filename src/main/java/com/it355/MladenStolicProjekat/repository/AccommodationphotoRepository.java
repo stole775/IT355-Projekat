@@ -5,6 +5,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,12 +15,13 @@ public interface AccommodationphotoRepository extends JpaRepository<Accommodatio
     @Query(value = " SELECT image_url FROM AccommodationPhotos  WHERE accommodation_id = :accommodationId",nativeQuery = true)
     List<String> findImageUrlByAccommodationId(int accommodationId);
 
-    @Modifying
+   /* @Modifying
     @Transactional
     @Query(value = "INSERT INTO AccommodationPhoto (accommodationId, imageUrl) VALUES (:accommodationId, :imageUrl)",nativeQuery = true)
     void savePhoto(int accommodationId, String imageUrl);
-
+*/
     @Query(value = " SELECT * FROM AccommodationPhotos  WHERE accommodation_id = :accommodationId",nativeQuery = true)
     List<Accommodationphoto> findAllByAccommodationId(int accommodationId);
-
+    @Transactional
+    void deleteByImageUrl(@Param("imageUrl") String imageUrl);
 }

@@ -63,6 +63,8 @@ public class AuthenticationService {
     private Map<String, Object> generateExtraClaims(Admin user) {
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("ID_Admina" , user.getId());
+        extraClaims.put("Ime" , user.getIme());
+        extraClaims.put("Prezime" , user.getPrezime());
         extraClaims.put("Username" , user.getUsername());
         extraClaims.put("Role" , user.getRole() );
         return extraClaims;

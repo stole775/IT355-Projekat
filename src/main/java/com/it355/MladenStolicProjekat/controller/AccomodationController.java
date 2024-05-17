@@ -64,6 +64,7 @@ public class AccomodationController {
     }
     @PostMapping("/")
     public ResponseEntity<?> addOrUpdateAccommodation(@RequestBody Accommodation accommodation) {
+        System.out.println("Received accommodation: {}"+ accommodation);
         Accommodation savedAccommodation = accomodationService.saveOrUpdateAccommodation(accommodation);
         if (savedAccommodation != null && savedAccommodation.getId() != null) {
             Map<String, Object> response = new HashMap<>();
