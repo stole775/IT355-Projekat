@@ -5,6 +5,8 @@ import com.it355.MladenStolicProjekat.entity.Accommodationphoto;
 import com.it355.MladenStolicProjekat.service.AccommodationphotoService;
 import com.it355.MladenStolicProjekat.service.AccomodationService;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,7 @@ import java.util.Optional;
 @RequestMapping("/api/accommodation")
 public class AccomodationController {
 
+    private static final Logger log = LoggerFactory.getLogger(AccomodationController.class);
     final AccomodationService accomodationService;
     final AccommodationphotoService accommodationphotoService;
 
@@ -117,5 +120,25 @@ public class AccomodationController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PutMapping("/{id}/slike")
+    public ResponseEntity<?> updateAccommodationImage(@PathVariable int id, @RequestParam("type") int type) {
+        Optional<Accommodation> existingAccommodation = accomodationService.findById(id);
+        System.out.println(existingAccommodation);
+        System.out.println(id);
+        if (existingAccommodation.isPresent()) {
+            Accommodation updatedAccommodation = existingAccommodation.get();
+            if (type == 1) {
+                updatedAccommodation.setImageUrl(null);  // Postavljanje imageUrl na null
+            } else if (type == 2) {
+                updatedAccommodation.setPriceListImageUrl(null);  // Postavljanje priceListImageUrl na null
+            }
+            accomodationService.saveOrUpdateAccommodation(updatedAccommodation);
+            return ResponseEntity.ok(updatedAccommodation);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
 }

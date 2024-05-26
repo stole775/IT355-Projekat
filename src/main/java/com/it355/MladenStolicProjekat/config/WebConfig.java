@@ -33,7 +33,7 @@ public class WebConfig implements WebMvcConfigurer {
                     CorsConfiguration corsConfiguration = new CorsConfiguration();
                     corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200"));
                     corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
-                    corsConfiguration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
+                    corsConfiguration.setAllowedHeaders(List.of("*"));
                     corsConfiguration.setAllowCredentials(true);
                     return corsConfiguration;
                 }))
@@ -41,16 +41,19 @@ public class WebConfig implements WebMvcConfigurer {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authConfig -> authConfig
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()  // Allow everyone to access login
-                        .requestMatchers("/actuator/health", "/actuator/info").permitAll()  // Allow all to access health and info endpoints
-                        .requestMatchers(HttpMethod.GET, "/**").permitAll()  // Allow all to access GET requests
-                        .requestMatchers(HttpMethod.POST, "/**").hasAuthority("FULL_ACCESS")  // Allow only ADMIN to perform POST
-                        .requestMatchers(HttpMethod.PUT, "/**").hasAuthority("FULL_ACCESS")  // Allow only ADMIN to perform PUT
-                        .requestMatchers(HttpMethod.DELETE, "/**").hasAuthority("FULL_ACCESS")  // Allow only ADMIN to perform DELETE
-                        .anyRequest().authenticated()  // All other requests need to be authenticated
+                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        .requestMatchers("/actuator/health", "/actuator/info").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/**").hasAuthority("FULL_ACCESS")
+                        .requestMatchers(HttpMethod.PUT, "/**").hasAuthority("FULL_ACCESS")
+                        .requestMatchers(HttpMethod.DELETE, "/**").hasAuthority("FULL_ACCESS")
+                        .anyRequest().authenticated()
                 );
 
 
         return http.build();
     }
+
+
+
 }

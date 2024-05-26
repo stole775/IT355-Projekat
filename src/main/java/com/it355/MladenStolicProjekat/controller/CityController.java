@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -102,7 +103,7 @@ public class CityController {
             @RequestParam("name") String name,
             @RequestParam("countryId") int countryId,
             @RequestParam("opisGrada") String opisGrada,
-            @RequestParam("image") MultipartFile image,
+            @RequestParam(value = "image", required = false) MultipartFile image,
             @RequestParam(value = "id", required = false) Optional<Integer> cityId) {
 
         Country country = countryService.findById(countryId)
@@ -115,11 +116,16 @@ public class CityController {
             city = cityService.findById(cityId.get())
                     .orElseThrow(() -> new RuntimeException("City not found"));
 
-            if (image != null && !image.isEmpty() && city.getSlikaGradaURL() != null) {
-                try {
-                    Files.deleteIfExists(Paths.get(UPLOAD_DIR + city.getSlikaGradaURL()));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+            if (image != null && !image.isEmpty()) {
+                if (city.getSlikaGradaURL() != null && !city.getSlikaGradaURL().isEmpty()) {
+                    Path oldImagePath = Paths.get(UPLOAD_DIR + city.getSlikaGradaURL());
+                    if (Files.exists(oldImagePath)) {
+                        try {
+                            Files.delete(oldImagePath);
+                        } catch (IOException e) {
+                            System.err.println("Failed to delete old image: " + e.getMessage());
+                        }
+                    }
                 }
                 imageUrl = storeImage(image);
             } else {
@@ -145,15 +151,21 @@ public class CityController {
     private String storeImage(MultipartFile file) {
         try {
             String originalFilename = file.getOriginalFilename();
-            String cleanedFilename = originalFilename != null ? originalFilename.replace(" ", "_") : null;
-
-            if (cleanedFilename != null) {
-                Path targetLocation = rootLocation.resolve(cleanedFilename);
-                Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-                return cleanedFilename;
-            } else {
+            if (originalFilename == null || originalFilename.isEmpty()) {
                 throw new RuntimeException("File name is invalid");
             }
+
+            String cleanedFilename = originalFilename.replace(" ", "_");
+            String extension = cleanedFilename.lastIndexOf(".") > 0 ? cleanedFilename.substring(cleanedFilename.lastIndexOf(".")) : "";
+            String baseFilename = cleanedFilename.substring(0, cleanedFilename.lastIndexOf("."));
+
+            // Generate a unique filename using the current epoch seconds
+            String uniqueFilename = baseFilename + "_" + Instant.now().getEpochSecond() + extension;
+
+            Path targetLocation = rootLocation.resolve(uniqueFilename);
+            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+
+            return uniqueFilename;
         } catch (IOException e) {
             throw new RuntimeException("Failed to store file", e);
         }
