@@ -1,6 +1,8 @@
 package com.it355.MladenStolicProjekat.controller;
 
 import com.it355.MladenStolicProjekat.service.AccommodationphotoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -22,6 +24,7 @@ import java.util.Objects;
 
 @RestController
 @AllArgsConstructor
+@Tag(name = "Image Upload Controller", description = "Upravljanje upload-om slika")
 public class ImageUploadController {
 
     private static final String UPLOAD_DIR = "./src/main/resources/static/images/";
@@ -29,6 +32,7 @@ public class ImageUploadController {
     private final AccommodationphotoService accommodationphotoService;
 
     @PostMapping("/upload")
+    @Operation(summary = "Upload slika", description = "Ova metoda omogućava upload više slika")
     public ResponseEntity<Map<String, String>> uploadImage(@RequestParam("images") MultipartFile[] files, @RequestParam("accommodationId") int accommodationId) {
         if (files.length == 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Nema fajlova"));
@@ -56,6 +60,7 @@ public class ImageUploadController {
     }
 
     @PostMapping("/single")
+    @Operation(summary = "Upload jedne slike", description = "Ova metoda omogućava upload jedne slike")
     public ResponseEntity<Map<String, String>> uploadSingleImage(@RequestParam("file") MultipartFile file) {
         try {
             String originalFilename = file.getOriginalFilename();
@@ -79,6 +84,7 @@ public class ImageUploadController {
     }
 
     @DeleteMapping("/delete/{imageUrl}")
+    @Operation(summary = "Brisanje slike", description = "Ova metoda briše sliku sa zadatim URL-om")
     public ResponseEntity<Map<String, String>> deleteImage(@PathVariable String imageUrl) {
         Path path = Paths.get(UPLOAD_DIR + imageUrl);
         System.out.println("Attempting to delete image with URL: " + imageUrl);
@@ -86,23 +92,22 @@ public class ImageUploadController {
             try {
                 Files.deleteIfExists(path);
                 Map<String, String> response = new HashMap<>();
-                response.put("message", "File deleted successfully");
+                response.put("message", "Uspesno obrisano");
                 accommodationphotoService.deleteByImageUrl(imageUrl);
                 return ResponseEntity.ok(response);
             } catch (IOException e) {
                 Map<String, String> errorResponse = new HashMap<>();
-                errorResponse.put("message", "Error deleting the file");
+                errorResponse.put("message", "Greska u brisanju fajla");
                 return ResponseEntity.internalServerError().body(errorResponse);
             }
         } else {
-            Map<String, String> notFoundResponse = new HashMap<>();
-            notFoundResponse.put("message", "File not found");
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "File not found"));
         }
     }
 
     private final Path rootLocation = Paths.get("./src/main/resources/static/images");
     @GetMapping("/images/{filename:.+}")
+    @Operation(summary = "Preuzimanje slike", description = "Ova metoda preuzima sliku sa zadatim imenom fajla")
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
         try {
             Path file = rootLocation.resolve(filename);

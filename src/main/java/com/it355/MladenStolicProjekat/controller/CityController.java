@@ -7,6 +7,8 @@ import com.it355.MladenStolicProjekat.service.AccommodationphotoService;
 import com.it355.MladenStolicProjekat.service.AccomodationService;
 import com.it355.MladenStolicProjekat.service.CityService;
 import com.it355.MladenStolicProjekat.service.CountryService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@Tag(name = "City Controller", description = "Upravljanje gradovima")
 @AllArgsConstructor
 @RequestMapping("/api/city")
 public class CityController {
@@ -35,13 +38,15 @@ public class CityController {
     final AccomodationService accomodationService;
 
     @GetMapping
-    public ResponseEntity<List<City>> findAll() {
+    @Operation(summary = "Preuzmi sve gradove", description = "Ova metoda vraća listu svih gradova")
+     public ResponseEntity<List<City>> findAll() {
         List<City> cities = cityService.findAll();
         return ResponseEntity.ok(cities);
     }
 
     @GetMapping("/nameC/{name}")
-    public ResponseEntity<List<City>> findByName(@PathVariable String name) {
+    @Operation(summary = "Pretraga gradova po imenu", description = "Ova metoda vraća listu gradova koji sadrže zadato ime")
+     public ResponseEntity<List<City>> findByName(@PathVariable String name) {
         List<City> cities = cityService.findByNameContains(name);
         if (cities.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -51,12 +56,14 @@ public class CityController {
 
 
     @GetMapping("/{id}")
+    @Operation(summary = "Preuzmi grad po ID-u", description = "Ova metoda vraća grad sa zadatim ID-om")
     public ResponseEntity<?> findById(@PathVariable int id) {
         Optional<?> city = cityService.findById(id);
         return city.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
     @GetMapping("/countryId/{id}")
-    public ResponseEntity<List<City>> findByCountryId(@PathVariable int id) {
+    @Operation(summary = "Pretraga gradova po ID-u zemlje", description = "Ova metoda vraća listu gradova koji pripadaju zadatoj zemlji")
+     public ResponseEntity<List<City>> findByCountryId(@PathVariable int id) {
         List<City> cities = cityService.findAllByCountryId(id);
         if (cities.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -67,9 +74,10 @@ public class CityController {
     private static final String UPLOAD_DIR = "./src/main/resources/static/images/";
     @Transactional
     @DeleteMapping("/{id}")
+    @Operation(summary = "Brisanje grada", description = "Ova metoda briše grad sa zadatim ID-om")
     public ResponseEntity<?> deleteCity(@PathVariable int id) {
         Optional<City> cityOpt = cityService.findById(id);
-        if (!cityOpt.isPresent()) {
+        if (cityOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -99,6 +107,7 @@ public class CityController {
     }
 
     @PostMapping("/")
+    @Operation(summary = "Dodavanje ili ažuriranje grada", description = "Ova metoda dodaje ili ažurira grad sa zadatim parametrima")
     public ResponseEntity<City> addOrUpdateCity(//npravi posle
             @RequestParam("name") String name,
             @RequestParam("countryId") int countryId,
@@ -172,6 +181,7 @@ public class CityController {
     }
 
     @GetMapping("/city/image/{id}")
+    @Operation(summary = "Preuzmi slike grada", description = "Ova metoda vraća URL-ove slika grada sa zadatim ID-om")
     public ResponseEntity<List<String>> getCityImageUrls(@PathVariable int id) {
         List<String> imageUrls = cityService.findImageUrlByCityId(id);
         if (imageUrls.isEmpty()) {

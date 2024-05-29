@@ -4,6 +4,8 @@ import com.it355.MladenStolicProjekat.entity.Accommodation;
 import com.it355.MladenStolicProjekat.entity.Accommodationphoto;
 import com.it355.MladenStolicProjekat.service.AccommodationphotoService;
 import com.it355.MladenStolicProjekat.service.AccomodationService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,13 +25,14 @@ import java.util.Optional;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/accommodation")
+@Tag(name = "Accommodation Controller", description = "Upravljanje smeštajem")
 public class AccomodationController {
 
-    private static final Logger log = LoggerFactory.getLogger(AccomodationController.class);
     final AccomodationService accomodationService;
     final AccommodationphotoService accommodationphotoService;
 
     @GetMapping("")
+    @Operation(summary = "Preuzmi sve smeštaje", description = "Ova metoda vraća listu svih smeštaja")
     public ResponseEntity<List<Accommodation>> getAllAccommodations() {
         List<Accommodation> list = accomodationService.findAll();
         if (list.isEmpty()) {
@@ -38,6 +41,7 @@ public class AccomodationController {
         return ResponseEntity.ok(list);  // Vraća 200 OK sa listom
     }
     @GetMapping("/name/{name}")
+    @Operation(summary = "Pretraga smeštaja po imenu", description = "Ova metoda vraća listu smeštaja koji sadrže zadato ime")
     public ResponseEntity<List<Accommodation>> findByName(  @PathVariable String name) {
         List<Accommodation> list = accomodationService.findByName(name);
         if (list.isEmpty()) {
@@ -46,6 +50,7 @@ public class AccomodationController {
         return ResponseEntity.ok(list);  // Vraća 200 OK sa listom
     }
     @GetMapping("/nameC/{name}")
+    @Operation(summary = "Pretraga smeštaja po delimičnom imenu", description = "Ova metoda vraća listu smeštaja koji sadrže zadato delimično ime")
     public ResponseEntity<List<Accommodation>> findByNameContaining( @PathVariable String name) {
         List<Accommodation> list = accomodationService.findByNameContaining(name);
         if (list.isEmpty()) {
@@ -54,18 +59,22 @@ public class AccomodationController {
         return ResponseEntity.ok(list);  // Vraća 200 OK sa listom
     }
     @GetMapping("/istaknutiOglasi")
+    @Operation(summary = "Preuzmi istaknute oglase", description = "Ova metoda vraća listu istaknutih oglasa")
     public ResponseEntity<List<Accommodation>> findByIstaknutiOglasi() {
         return ResponseEntity.ok(accomodationService.istaknutiOglasi());
     }
     @GetMapping("/cityId/{city_id}")
+    @Operation(summary = "Pretraga smeštaja po ID-u grada", description = "Ova metoda vraća listu smeštaja koji pripadaju zadatom gradu")
     public ResponseEntity<List<Accommodation>> findByCityId(@PathVariable int city_id) {
         return ResponseEntity.ok(accomodationService.findByCityId(city_id));
     }
     @GetMapping("/{id}")
+    @Operation(summary = "Preuzmi smeštaj po ID-u", description = "Ova metoda vraća smeštaj sa zadatim ID-om")
     public ResponseEntity<Optional<Accommodation>> findById(@PathVariable int id) {
         return ResponseEntity.ok(accomodationService.findById(id));
     }
     @PostMapping("/")
+    @Operation(summary = "Dodavanje ili ažuriranje smeštaja", description = "Ova metoda dodaje ili ažurira smeštaj")
     public ResponseEntity<?> addOrUpdateAccommodation(@RequestBody Accommodation accommodation) {
         System.out.println("Received accommodation: {}"+ accommodation);
         Accommodation savedAccommodation = accomodationService.saveOrUpdateAccommodation(accommodation);

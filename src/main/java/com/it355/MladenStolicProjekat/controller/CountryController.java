@@ -7,6 +7,8 @@ import com.it355.MladenStolicProjekat.service.AccommodationphotoService;
 import com.it355.MladenStolicProjekat.service.AccomodationService;
 import com.it355.MladenStolicProjekat.service.CityService;
 import com.it355.MladenStolicProjekat.service.CountryService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,7 @@ import java.util.Optional;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/country")
+@Tag(name = "Country Controller", description = "Upravljanje zemljama")
 public class CountryController {
 
     final CountryService countryService;
@@ -29,6 +32,7 @@ public class CountryController {
     final AccomodationService accomodationService;
 
     @GetMapping()
+    @Operation(summary = "Preuzmi sve zemlje", description = "Ova metoda vraća listu svih zemalja")
     public ResponseEntity<List<Country>> findAll() {
         List<Country> cities = countryService.findAll();
         return ResponseEntity.ok(cities);
@@ -37,6 +41,7 @@ public class CountryController {
 
 
     @GetMapping("/nameC/{name}")
+    @Operation(summary = "Pretraga zemalja po imenu", description = "Ova metoda vraća listu zemalja koje sadrže zadato ime")
     public ResponseEntity<List<Country>> findByNameContains(@PathVariable String name) {
         List<Country> countries = countryService.findByNameContains(name);
         if (countries.isEmpty()) {
@@ -47,6 +52,7 @@ public class CountryController {
 
 
     @GetMapping("/{id}")
+    @Operation(summary = "Preuzmi zemlju po ID-u", description = "Ova metoda vraća zemlju sa zadatim ID-om")
     public ResponseEntity<Optional<Country>> findById(@PathVariable int id) {
         Optional<Country> country = countryService.findById(id);
         if (country.isEmpty()) {
@@ -57,6 +63,7 @@ public class CountryController {
 
     private static final String UPLOAD_DIR = "./src/main/resources/static/images/";
     @DeleteMapping("/{id}")
+    @Operation(summary = "Brisanje zemlje", description = "Ova metoda briše zemlju sa zadatim ID-om")
     public ResponseEntity<?> deleteCountry(@PathVariable int id) {
         Path target = null;
         Optional<?> country = countryService.findById(id);

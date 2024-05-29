@@ -1,8 +1,9 @@
 package com.it355.MladenStolicProjekat.controller;
 
 import com.it355.MladenStolicProjekat.entity.Admin;
-import com.it355.MladenStolicProjekat.service.AdminService;
 import com.it355.MladenStolicProjekat.service.impl.AdminServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,14 +17,16 @@ import java.util.Optional;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/admin")
+@Tag(name = "Admin Controller", description = "Administrativne funkcije")
 public class AdminController {
 
     final AdminServiceImpl adminService;
 
     @PutMapping("/update")
+    @Operation(summary = "Ažuriranje admina", description = "Ova metoda ažurira podatke admina")
     public ResponseEntity<?> updateUser(@RequestBody Admin updatedAdmin) {
         Optional<Admin> existingAdminOptional = adminService.findByUsername(updatedAdmin.getUsername());
-        if (!existingAdminOptional.isPresent()) {
+        if (existingAdminOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         Admin existingAdmin = existingAdminOptional.get();
