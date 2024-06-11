@@ -86,5 +86,19 @@ public class AccommodationphotoServiceImplTest {
         assertThrows(RuntimeException.class, () -> {
             accommodationphotoService.savePhoto(99, "url99");
         });
+
+
+    }
+
+
+
+    @Test
+    public void testFindById() {
+        Accommodationphoto photo = new Accommodationphoto();
+        when(accommodationphotoRepository.findById(1)).thenReturn(Optional.of(photo));
+
+        Optional<Accommodationphoto> result = (Optional<Accommodationphoto>) accommodationphotoService.getById(1);
+        assertTrue(result.isPresent());
+        verify(accommodationphotoRepository, times(1)).findById(1);
     }
 }
