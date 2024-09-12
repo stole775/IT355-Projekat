@@ -32,13 +32,19 @@ public class WebConfig implements WebMvcConfigurer {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration corsConfiguration = new CorsConfiguration();
-                    corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200"));
+                    corsConfiguration.setAllowedOrigins(List.of(
+                            "http://localhost:4200",
+                            "http://192.168.100.150:4200",
+                            "http://192.168.100.150",
+                            "http://89.23.68.241",
+                            "http://016travel.duckdns.org")); // Allow frontend from both localhost and network IP
                     corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
                     corsConfiguration.setAllowedHeaders(List.of("*"));
-                    corsConfiguration.setExposedHeaders(List.of("Authorization"));
+                    corsConfiguration.setExposedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
                     corsConfiguration.setAllowCredentials(true);
                     return corsConfiguration;
                 }))
+
                 .sessionManagement(sessionMangConfig -> sessionMangConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

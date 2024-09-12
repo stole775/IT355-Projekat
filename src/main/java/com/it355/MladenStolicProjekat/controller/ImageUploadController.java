@@ -27,7 +27,10 @@ import java.util.Objects;
 @Tag(name = "Image Upload Controller", description = "Upravljanje upload-om slika")
 public class ImageUploadController {
 
-    private static final String UPLOAD_DIR = "./src/main/resources/static/images/";
+   //stari private static final String UPLOAD_DIR = "./src/main/resources/static/images/";
+   //stari private final Path rootLocation = Paths.get("./src/main/resources/static/images");
+   private static final String UPLOAD_DIR = "/app/slike/"; // Mapirano u Docker-u
+   private final Path rootLocation = Paths.get("/app/slike");
 
     private final AccommodationphotoService accommodationphotoService;
 
@@ -105,7 +108,7 @@ public class ImageUploadController {
         }
     }
 
-    private final Path rootLocation = Paths.get("./src/main/resources/static/images");
+    
     @GetMapping("/images/{filename:.+}")
     @Operation(summary = "Preuzimanje slike", description = "Ova metoda preuzima sliku sa zadatim imenom fajla")
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) {

@@ -36,7 +36,7 @@ public class AdminController {
         existingAdmin.setPassword(new BCryptPasswordEncoder().encode(updatedAdmin.getPassword()));
 
         adminService.save(existingAdmin);
-        return ResponseEntity.ok().body("User updated successfully");
+        return ResponseEntity.ok().body("{\"message\": \"Lozinka promenjena\"}");
     }
 
 }

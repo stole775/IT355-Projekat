@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface CityRepository extends JpaRepository<City, Integer> {
-    @Query(value = "SELECT * FROM Cities c WHERE name LIKE %:name% LIMIT 4", nativeQuery = true)
+    @Query(value = "SELECT * FROM cities c WHERE name LIKE %:name% LIMIT 4", nativeQuery = true)
     List<City> findByNameContains(String name);
 
     List<City> findAllByCountryId(int id);

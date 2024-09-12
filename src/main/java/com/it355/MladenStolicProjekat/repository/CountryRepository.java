@@ -14,7 +14,7 @@ public interface CountryRepository extends JpaRepository<Country, Integer> {
     List<Country> findAll();
     List<Country> findByNameContains(String name);
     Optional<Country> findById(int id);
-    @Query(value = "SELECT * FROM Countries WHERE name LIKE %:name% LIMIT 4", nativeQuery = true)
+    @Query(value = "SELECT * FROM countries WHERE name LIKE %:name% LIMIT 4", nativeQuery = true)
     List<Country> findByNameContainsIgnoreCase(String name);
 
 

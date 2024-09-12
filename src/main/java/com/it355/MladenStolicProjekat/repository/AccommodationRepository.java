@@ -12,11 +12,11 @@ import java.util.Optional;
 public interface AccommodationRepository extends JpaRepository<Accommodation, Integer> {
     List<Accommodation> findAll();
     List<Accommodation> findByName(String name);
-    @Query(value = "SELECT * FROM Accommodations WHERE name LIKE %:name% LIMIT 4", nativeQuery = true)
+    @Query(value = "SELECT * FROM accommodations WHERE name LIKE %:name% LIMIT 4", nativeQuery = true)
     List<Accommodation> findByNameContaining(String name);
-    @Query(value="SELECT * FROM Accommodations WHERE featured = TRUE",nativeQuery = true)
+    @Query(value="SELECT * FROM accommodations WHERE featured = TRUE",nativeQuery = true)
     List<Accommodation> istaknutiOglasi();
-    @Query(value = "SELECT * FROM Accommodations WHERE city_id = :city_id ",nativeQuery = true)
+    @Query(value = "SELECT * FROM accommodations WHERE city_id = :city_id ",nativeQuery = true)
     List<Accommodation> findByCityId(int city_id);
     Optional<Accommodation> findById(int id);
 
